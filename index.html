@@ -1,0 +1,317 @@
+<body>
+    <header class="page-header">
+        <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+        
+        <link rel="stylesheet" href="view.css">
+        
+
+    </header>
+
+    <div class="main">
+        <div class="right">
+
+        </div>
+
+        <div class="left">
+
+            <div class="fluid-container">
+                <!-- <a href="#" class="yourlink">Click Here</a> -->
+                <div class="col-md-4 form-section">
+                    <form action="#">
+                        <div class="field">
+                            
+                            <input id="newitem" name="title" placeholder="Title" type="text" class="field text fn form-control" value="" size="8" tabindex="1">
+                        </div>
+                        <div class="field">
+                            <select id="datepicker" name="title" placeholder="Type" >
+                                <option value="Work">Work</option>
+                                <option value="Home">Home</option>
+                              </select>
+                            
+                        </div>
+
+                        
+                        <div class="field">
+                            
+                            <textarea id="newitemTxt" name="Field4" placeholder="Description" class="form-control" spellcheck="true" rows="10" cols="50" tabindex="4"></textarea>
+                        </div>
+                        <div class="field">
+                            <button class="btn btn-info" type="submit" value="Add">POST</button>
+                            
+                        </div>
+                    </form>
+                </div>
+                <!-- end of form-section-->
+                <div class="col-md-8 result-section">
+                    <ul id="todolist"></ul>
+                </div>
+                <script>
+                    $(function() {
+                        // $("#datepicker").datepicker();
+                    });
+        
+                    $('a.yourlink').click(function(e) {
+                        e.preventDefault();
+                        window.open('http://yoururl1.com');
+                        window.open('http://yoururl2.com');
+                    });
+                </script>
+        
+                
+                </script>
+            </div>
+
+        </div>
+    </div>
+   
+
+    <form action="http://www.google.com/search" method="get">
+        <input type="text" name="q"/>
+        <input type="submit" value="search" />
+    </form>
+    <script>
+
+//array to store task
+
+
+$(document).ready(function() {
+	var taskList = Array();
+
+
+	setTimeout(
+		function() {
+			readTasks();
+		}, 500);
+
+
+
+
+	var todo = document.querySelector('#todolist'),
+
+		form = document.querySelector('form'),
+		field = document.querySelector('#newitem');
+        field2 = document.querySelector('#newitemTxt');
+        date = document.querySelector('#datepicker');
+
+
+	form.addEventListener('submit', function(ev) {
+		count = Math.floor(Date.now() / 1000);
+		//console.log(Math.floor(Date.now() / 1000));
+		var text = field.value;
+		var text2 = field2.value;
+		var textDate = date.value;
+
+		todo.innerHTML = '';
+
+		if (text !== '' && text2 !== '' && textDate !== '') {
+			const task = new Array(text, text2, textDate);
+
+			// todo.innerHTML += task;
+
+		
+
+			var names = [];
+			names[0] = task;
+			localStorage.setItem("names", JSON.stringify(names))
+			//store array to a db called tasks
+			window.localStorage.setItem("tasks" + count, task);
+			// console.log(count, task)
+			//console.log(window.localStorage.length + 1);
+			setTimeout(
+				function() {
+					
+					
+					
+					console.log(window.localStorage.getItem("names"));
+
+					
+					//console.log(window.localStorage.length + 1);
+
+				}, 500);
+			//
+
+		}
+		ev.preventDefault();
+
+		todo.innerHTML = '';
+		setTimeout(
+			function() {
+				readTasks();
+			}, 500);
+
+
+
+		// todo.innerHTML = '';
+		// readTasks();
+
+	}, false);
+
+	todo.addEventListener('click', function(ev) {
+		var t = ev.target;
+		if (t.tagName === 'LI') {
+			t.parentNode.removeChild(t);
+		};
+		ev.preventDefault();
+	}, false);
+
+});
+
+
+
+
+// read tasks
+function readTasks() {
+	if (window.localStorage == null) {
+		alert("db is emlty");
+
+	} else {
+
+		var todo = document.querySelector('#todolist');
+
+		// var savedTasks = window.localStorage.getItem("tasks");
+
+
+		//push task to array so we dont over write old tasks the next time
+		// taskList.push(savedTasks);
+
+
+		let i = 0;
+		// console.log(Object.entries(window.localStorage)[1]);
+		obj = Object.entries(window.localStorage);
+		Object.keys(obj).forEach(key => {
+			// console.log(obj[key]);
+			// console.log(key, obj[key]);
+
+			text = obj[key][1];
+			name = obj[key][0];
+			// console.log(text);
+
+			const taskElement = document.createElement("div");
+			taskElement.classList.add('tasks');
+			taskElement.classList.add('task' + key);
+			todo.appendChild(taskElement);
+
+
+			const myArray = text.split(",");
+			//Add text to task (loop through array made from text)
+			myArray.forEach(element => {
+				//create details
+				const para = document.createElement("p");
+				
+            
+                if(element == 'work'){
+                    taskElement.classList.add('Work');
+                } 
+                if(element == 'home'){
+                    taskElement.classList.add('Home');
+                } 
+               
+                para.classList.add('detail' + key);
+                //add each detail to task
+                taskElement.appendChild(para);
+                para.innerText = element;
+
+
+			});
+
+
+			//create remove button
+			count = window.localStorage.length;
+			const remove = document.createElement("button");
+			remove.classList.add(name);
+			remove.innerHTML += name;
+			taskElement.appendChild(remove);
+
+			//add task to to do
+			todo.appendChild(taskElement);
+		});
+		
+		console.log('-----');
+
+		// while (i < window.localStorage.length) {
+		// console.log(i);
+		// console.log(window.localStorage.getItem("tasks" + i));
+
+		//create task div
+		//const taskElement = document.createElement("div");
+		//taskElement.classList.add('tasks');
+		// taskElement.classList.add('tasks' + i);
+
+
+
+		// //split text to array
+
+		// if(window.localStorage.getItem("tasks" + i)){
+		//     let text = window.localStorage.getItem("tasks" + i);
+
+		//     const myArray = text.split(",");
+
+		//     //Add text to task (loop through array made from text)
+		//     myArray.forEach(element => {
+		//         //create details
+		//         const para = document.createElement("p");
+		//         para.classList.add('detail' + i);
+		//         para.innerText = element;
+
+		//         //add each detail to task
+		//         taskElement.appendChild(para);
+
+
+		//     });
+
+		//     //create remove button
+		//     const remove = document.createElement("button");
+		//     remove.classList.add('button' + i);
+		//     remove.innerHTML += 'Remove Task';
+		//     taskElement.appendChild(remove);
+
+		//     //add task to to do
+		//     todo.appendChild(taskElement);
+
+
+		// }
+		// i++;
+
+
+
+		// todo.innerHTML = window.localStorage.getItem("tasks" + i);
+		//const para = document.createElement("p");
+		//para.classList.add('tasks' + i);
+		//para.innerText = window.localStorage.getItem("tasks" + i);
+		// todo.appendChild(para);
+
+
+		//}
+
+		$('.tasks button').click(function() {
+			$class = $(this).attr('class');
+			// console.log($class);
+			window.localStorage.removeItem($class);
+			todo.innerHTML = '';
+
+			setTimeout(
+				function() {
+					readTasks();
+				}, 500);
+
+
+		});
+
+
+	}
+}
+
+
+// // read tasks
+// function DeleteTasks() {
+   
+// }
+
+
+    </script>
+</body>
+
+</html>

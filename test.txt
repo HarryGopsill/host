@@ -1,0 +1,175 @@
+<body>
+    <header class="page-header">
+        <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+         <h2>To-Do List  <br /><small>Please provide details on the task.</small></h2>
+
+    </header>
+    <div class="fluid-container">
+        <a href="#" class="yourlink">Click Here</a>
+        <div class="col-md-4 form-section">
+            <form action="#">
+                <div>
+                    <label class="desc" id="title" for="title">List Title</label>
+                    <input id="newitem" name="title" type="text" class="field text fn form-control" value="" size="8" tabindex="1">
+                </div>
+                <div>
+                    <label class="desc" id="title" for="title">Add Task Date</label>
+                    <input id="datepicker" name="title" type="text" class="field text fn form-control" value="" size="8" tabindex="1">
+                </div>
+                <div>
+                    <label class="desc" id="title4" for="Field4">Task Details</label>
+                    <textarea id="newitemTxt" name="Field4" class="form-control" spellcheck="true" rows="10" cols="50" tabindex="4"></textarea>
+                </div>
+                <div>
+                    <button class="btn btn-info" type="submit" value="Add">POST</button>
+                    <button class="btn btn-warning" type="reset" value="Add">RESET</button>
+                </div>
+            </form>
+        </div>
+        <!-- end of form-section-->
+        <div class="col-md-8 result-section">
+            <ul id="todolist"></ul>
+        </div>
+        <script>
+            $(function() {
+                // $("#datepicker").datepicker();
+            });
+
+            $('a.yourlink').click(function(e) {
+                e.preventDefault();
+                window.open('http://yoururl1.com');
+                window.open('http://yoururl2.com');
+            });
+        </script>
+
+        
+        </script>
+    </div>
+
+    <form action="http://www.google.com/search" method="get">
+        <input type="text" name="q"/>
+        <input type="submit" value="search" />
+    </form>
+    <script>
+
+//array to store task
+var taskList = Array();
+$(document).ready(
+
+function () {
+    readTasks(); //load stored tasks to page
+});
+
+(function () {
+
+    var todo = document.querySelector('#todolist'),
+        form = document.querySelector('form'),
+        field = document.querySelector('#newitem');
+    field2 = document.querySelector('#newitemTxt');
+    date = document.querySelector('#datepicker');
+    count = window.localStorage.length;
+
+    form.addEventListener('submit', function (ev) {
+        var text = field.value;
+        var text2 = field2.value;
+        var textDate = date.value;
+        if (text !== '' && text2 !== '' && textDate !== '') {
+            const task = new Array(text , text2 , textDate);
+          
+            // todo.innerHTML += task;
+
+            //push task to array
+            // taskList.push(task);
+            //store array to a db called tasks
+            window.localStorage.setItem("tasks" + count, task);
+
+        }
+        ev.preventDefault();
+        
+        count++;
+        // todo.innerHTML = '';
+        // readTasks();
+       
+    }, false);
+
+    todo.addEventListener('click', function (ev) {
+        var t = ev.target;
+        if (t.tagName === 'LI') {
+            t.parentNode.removeChild(t);
+        };
+        ev.preventDefault();
+    }, false);
+
+})();
+
+
+// read tasks
+function readTasks() {
+    if (window.localStorage == null) {
+        alert("db is emlty");
+
+    } else {
+        var todo = document.querySelector('#todolist');
+        
+        // var savedTasks = window.localStorage.getItem("tasks");
+
+       
+        //push task to array so we dont over write old tasks the next time
+        // taskList.push(savedTasks);
+        
+
+        let i = 0;
+        console.log(window.localStorage);
+
+      
+        while (i < window.localStorage.length) {
+       
+ 
+            //create task div
+            const taskElement = document.createElement("div");
+            taskElement.classList.add('tasks' + i);
+
+
+
+            //split text to array
+            let text = window.localStorage.getItem("tasks" + i);
+            const myArray = text.split(",");
+        
+            //Add text to task (loop through array made from text)
+            myArray.forEach(element => {
+                //create details
+                const para = document.createElement("p");
+                para.classList.add('detail' + i);
+                para.innerText = element;
+
+                //add each detail to task
+                taskElement.appendChild(para);
+
+
+                
+            });
+
+            //add task to to do
+            todo.appendChild(taskElement);
+
+            i++;
+
+            // todo.innerHTML = window.localStorage.getItem("tasks" + i);
+            //const para = document.createElement("p");
+            //para.classList.add('tasks' + i);
+            //para.innerText = window.localStorage.getItem("tasks" + i);
+            // todo.appendChild(para);
+            
+            
+        }
+
+        
+    }
+}
+    </script>
+</body>
+
+</html>
